@@ -5,16 +5,31 @@ import 'package:apex/res/strings.dart';
 import 'package:apex/view/resuable_widgets/button.dart';
 import 'package:apex/view/resuable_widgets/input_field.dart';
 import 'package:apex/view/resuable_widgets/social_card.dart';
+import 'package:apex/view/ui/pin_screen.dart';
+import 'package:apex/view_model/blocs/login_bloc/login_bloc.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
-class LoginScreen extends StatefulWidget {
+class LoginScreen extends StatelessWidget {
   const LoginScreen({Key? key}) : super(key: key);
 
   @override
-  State<LoginScreen> createState() => _LoginScreenState();
+  Widget build(BuildContext context) {
+    return BlocProvider(
+      create: (context) => LoginBloc()..add(CheckAuth()),
+      child: const _LoginScreen(),
+    );
+  }
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class _LoginScreen extends StatefulWidget {
+  const _LoginScreen({Key? key}) : super(key: key);
+
+  @override
+  State<_LoginScreen> createState() => __LoginScreenState();
+}
+
+class __LoginScreenState extends State<_LoginScreen> {
   final TextEditingController _emailController = TextEditingController();
 
   final TextEditingController _passwordController = TextEditingController();
@@ -32,97 +47,137 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.white,
-      body: SafeArea(
-        child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 20.0),
-          height: screenHeight(1, context),
-          width: screenWidth(1, context),
-          child: Form(
-            key: _formKey,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                SizedBox(
-                  height: screenHeight(.03, context),
-                ),
-                Text(
-                  AppStrings.heyThere,
-                  style: AppAssets.appTextStyle.copyWith(
-                      color: AppColors.appDarkColor,
-                      fontWeight: FontWeight.w700,
-                      fontSize: 24),
-                ),
-                SizedBox(
-                  height: screenHeight(.01, context),
-                ),
-                Text(
-                  AppStrings.welcomeSignIn,
-                  style: AppAssets.appTextStyle.copyWith(
-                    color: AppColors.appGrey,
-                    fontWeight: FontWeight.w400,
-                    fontSize: 16,
+      body: BlocListener<LoginBloc, LoginState>(
+        listener: (context, state) {
+          if (state is HasAuth) {
+            Navigator.pushNamed(
+              context,
+              AppRouteStrings.pinScreen,
+              arguments: PinScreenArg(newUser: false, token: ""),
+            );
+          }
+          if (state is LoginFailed) {
+            AppAssets.showSnackBar(
+                ctx: context, isSuccessful: false, message: state.error);
+          }
+          if (state is LoginSuccess) {
+            Navigator.pushNamed(
+              context,
+              AppRouteStrings.pinScreen,
+              arguments: PinScreenArg(newUser: true, token: state.token),
+            );
+          }
+        },
+        child: SafeArea(
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 20.0),
+            height: screenHeight(1, context),
+            width: screenWidth(1, context),
+            child: Form(
+              key: _formKey,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SizedBox(
+                    height: screenHeight(.03, context),
                   ),
-                ),
-                SizedBox(
-                  height: screenHeight(.05, context),
-                ),
-                AppTextFormField(
-                  isPassword: false,
-                  controller: _emailController,
-                  inputName: AppStrings.email,
-                ),
-                SizedBox(
-                  height: screenHeight(.02, context),
-                ),
-                AppTextFormField(
-                  isPassword: true,
-                  controller: _passwordController,
-                  inputName: AppStrings.password,
-                ),
-                SizedBox(
-                  height: screenHeight(.025, context),
-                ),
-                Text(
-                  AppStrings.forgotPassword,
-                  style: AppAssets.appTextStyle.copyWith(
-                    color: AppColors.appOrangeColor,
-                    fontWeight: FontWeight.w700,
-                    fontSize: 16,
+                  Text(
+                    AppStrings.heyThere,
+                    style: AppAssets.appTextStyle.copyWith(
+                        color: AppColors.appDarkColor,
+                        fontWeight: FontWeight.w700,
+                        fontSize: 24),
                   ),
-                ),
-                SizedBox(
-                  height: screenHeight(.03, context),
-                ),
-                AppButton(
-                  enabled: _passwordController.text.isNotEmpty &&
-                      _emailController.text.isNotEmpty,
-                  onPress: () {},
-                  text: AppStrings.signIn,
-                ),
-                SizedBox(
-                  height: screenHeight(.03, context),
-                ),
-                decorWidget(),
-                SizedBox(
-                  height: screenHeight(.02, context),
-                ),
-                Row(
-                  children: [
-                    socialAuthCard(AppAssets.googleIcon, () {}),
-                    const SizedBox(
-                      width: 20,
+                  SizedBox(
+                    height: screenHeight(.01, context),
+                  ),
+                  Text(
+                    AppStrings.welcomeSignIn,
+                    style: AppAssets.appTextStyle.copyWith(
+                      color: AppColors.appGrey,
+                      fontWeight: FontWeight.w400,
+                      fontSize: 16,
                     ),
-                    socialAuthCard(AppAssets.appleIcon, () {}),
-                  ],
-                ),
-                const Expanded(child: SizedBox()),
-                const SelectAuthButton(
-                  isSignUp: false,
-                ),
-                SizedBox(
-                  height: screenHeight(.02, context),
-                ),
-              ],
+                  ),
+                  SizedBox(
+                    height: screenHeight(.05, context),
+                  ),
+                  AppTextFormField(
+                    isPassword: false,
+                    controller: _emailController,
+                    inputName: AppStrings.email,
+                  ),
+                  SizedBox(
+                    height: screenHeight(.02, context),
+                  ),
+                  AppTextFormField(
+                    isPassword: true,
+                    controller: _passwordController,
+                    inputName: AppStrings.password,
+                  ),
+                  SizedBox(
+                    height: screenHeight(.025, context),
+                  ),
+                  Text(
+                    AppStrings.forgotPassword,
+                    style: AppAssets.appTextStyle.copyWith(
+                      color: AppColors.appOrangeColor,
+                      fontWeight: FontWeight.w700,
+                      fontSize: 16,
+                    ),
+                  ),
+                  SizedBox(
+                    height: screenHeight(.03, context),
+                  ),
+                  BlocBuilder<LoginBloc, LoginState>(buildWhen: (prev, next) {
+                    if (prev is LoginLoading) {
+                      return true;
+                    }
+                    return true;
+                  }, builder: (context, state) {
+                    bool l = false;
+                    if (state is LoginLoading) {
+                      l = true;
+                    } else {
+                      l = false;
+                    }
+                    return AppButton(
+                      loading: l,
+                      enabled: _passwordController.text.isNotEmpty &&
+                          _emailController.text.isNotEmpty,
+                      onPress: () {
+                        context.read<LoginBloc>().add(Login(
+                            email: _emailController.text,
+                            password: _passwordController.text));
+                      },
+                      text: AppStrings.signIn,
+                    );
+                  }),
+                  SizedBox(
+                    height: screenHeight(.03, context),
+                  ),
+                  decorWidget(),
+                  SizedBox(
+                    height: screenHeight(.02, context),
+                  ),
+                  Row(
+                    children: [
+                      socialAuthCard(AppAssets.googleIcon, () {}),
+                      const SizedBox(
+                        width: 20,
+                      ),
+                      socialAuthCard(AppAssets.appleIcon, () {}),
+                    ],
+                  ),
+                  const Expanded(child: SizedBox()),
+                  const SelectAuthButton(
+                    isSignUp: false,
+                  ),
+                  SizedBox(
+                    height: screenHeight(.02, context),
+                  ),
+                ],
+              ),
             ),
           ),
         ),

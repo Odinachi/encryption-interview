@@ -9,14 +9,14 @@ class LoginResponse {
 
   bool? status;
   String? message;
-  Data? data;
+  LoginData? data;
   List<dynamic>? meta;
   List<dynamic>? pagination;
 
   factory LoginResponse.fromJson(Map<String, dynamic> json) => LoginResponse(
         status: json["status"],
         message: json["message"],
-        data: json["data"] == null ? null : Data.fromJson(json["data"]),
+        data: json["data"] == null ? null : LoginData.fromJson(json["data"]),
         meta: json["meta"] == null
             ? null
             : List<dynamic>.from(json["meta"].map((x) => x)),
@@ -36,8 +36,8 @@ class LoginResponse {
       };
 }
 
-class Data {
-  Data({
+class LoginData {
+  LoginData({
     this.user,
     this.token,
   });
@@ -45,7 +45,7 @@ class Data {
   LoginUser? user;
   String? token;
 
-  factory Data.fromJson(Map<String, dynamic> json) => Data(
+  factory LoginData.fromJson(Map<String, dynamic> json) => LoginData(
         user: json["user"] == null ? null : LoginUser.fromJson(json["user"]),
         token: json["token"],
       );

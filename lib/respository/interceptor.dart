@@ -8,14 +8,16 @@ class ApiInterceptors extends Interceptor {
   void onRequest(
       RequestOptions options, RequestInterceptorHandler handler) async {
     if (options.path.contains("dashboard")) {
-      var a =
-          Encrypted.from64(await AppStorage.instance.getRequestToken() ?? "");
-      var token = BlackHat()
-          .decryptWithAES(await AppStorage.instance.getPinCode() ?? "", a);
+      var a = Encrypted.from64(AppStorage.instance.getRequestToken() ?? "");
+      var token =
+          BlackHat().decryptWithAES(AppStorage.instance.getPinCode() ?? "", a);
 
-      options.headers.addAll({r"Token": token});
+      options.headers['Authorization'] = 'Bearer $token';
+
+      return handler.next(options);
+    } else {
+      super.onRequest(options, handler);
     }
-    super.onRequest(options, handler);
   }
 
   @override
@@ -29,8 +31,6 @@ class ApiInterceptors extends Interceptor {
         ),
       );
     }
-
-    // super.onError(dioError, handler); //add this line
   }
 
   @override

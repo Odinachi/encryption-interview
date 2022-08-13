@@ -3,26 +3,37 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class AppStorage {
   static final AppStorage instance = AppStorage._instance();
-
+  late SharedPreferences _sharedPreferences;
   AppStorage._instance();
 
+  final _p = "splash";
+
+  Future initialize() async {
+    _sharedPreferences = await SharedPreferences.getInstance();
+  }
+
   void savePinCode(String pincode) async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setString(dotenv.env['my-code-pin'] ?? "", pincode);
+    await _sharedPreferences.setString(
+        dotenv.env['my-code-pin'] ?? "", pincode);
   }
 
-  Future<String?> getPinCode() async {
-    final prefs = await SharedPreferences.getInstance();
-    return prefs.getString(dotenv.env['my-code-pin'] ?? "");
+  String? getPinCode() {
+    return _sharedPreferences.getString(dotenv.env['my-code-pin'] ?? "");
   }
 
-  Future<String?> getRequestToken() async {
-    final prefs = await SharedPreferences.getInstance();
-    return prefs.getString(dotenv.env['JWT'] ?? "");
+  String? getRequestToken() {
+    return _sharedPreferences.getString(dotenv.env['JWT'] ?? "");
   }
 
   void saveRequestToken(String token) async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setString(dotenv.env['JWT'] ?? "", token);
+    await _sharedPreferences.setString(dotenv.env['JWT'] ?? "", token);
+  }
+
+  void saveSeenSplash(bool seen) async {
+    await _sharedPreferences.setBool(_p, seen);
+  }
+
+  bool? getSeenSplash() {
+    return _sharedPreferences.getBool(_p);
   }
 }

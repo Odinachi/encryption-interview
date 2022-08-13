@@ -1,3 +1,4 @@
+import 'package:apex/data/local/storage.dart';
 import 'package:apex/res/assets.dart';
 import 'package:apex/res/colors.dart';
 import 'package:apex/res/constants.dart';
@@ -82,6 +83,7 @@ class _OnBoardingScreenState extends State<OnBoardingScreen>
   @override
   Widget build(BuildContext context) {
     void skipOnBoarding() {
+      AppStorage.instance.saveSeenSplash(true);
       Navigator.popAndPushNamed(context, AppRouteStrings.loginScreen);
     }
 

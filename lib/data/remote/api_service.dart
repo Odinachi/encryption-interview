@@ -26,6 +26,6 @@ abstract class ApiService {
   Future<Map<String, dynamic>?> login(
       @Field() String email, @Field() String password, @Field() String device);
 
-  @POST("/dashboard")
+  @GET("/dashboard")
   Future<Map<String, dynamic>?> dashboard();
 }

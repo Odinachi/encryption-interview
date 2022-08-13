@@ -1,3 +1,4 @@
+import 'package:apex/data/local/storage.dart';
 import 'package:apex/res/strings.dart';
 import 'package:apex/view/routes.dart';
 import 'package:flutter/material.dart';
@@ -5,6 +6,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 void main() async {
   await dotenv.load(fileName: ".env");
+  await AppStorage.instance.initialize();
   runApp(const MyApp());
 }
 
@@ -14,11 +16,19 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    return MaterialApp(
       debugShowCheckedModeBanner: false,
       onGenerateRoute: appRoutes,
-      initialRoute: AppRouteStrings.onBoardingScreen,
+      initialRoute: getInitialScreen(),
       // home: Scaffold(body: HomeScreen()),
     );
+  }
+
+  String getInitialScreen() {
+    var _p = AppStorage.instance;
+    if (_p.getSeenSplash() == true) {
+      return AppRouteStrings.loginScreen;
+    }
+    return AppRouteStrings.onBoardingScreen;
   }
 }

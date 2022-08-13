@@ -1,5 +1,7 @@
 import 'package:apex/data/remote/api_service.dart';
 import 'package:apex/models/get_email_token_response.dart';
+import 'package:apex/models/home_response_model.dart';
+import 'package:apex/models/login_response.dart';
 import 'package:apex/models/resgister_response.dart';
 import 'package:apex/models/verify_email_token_response.dart';
 import 'package:apex/res/assets.dart';
@@ -52,12 +54,12 @@ class ApiRepository extends _ApiService {
     );
   }
 
-  Future<Tuple2<VerifyTokenData?, String?>> login(
+  Future<Tuple2<LoginData?, String?>> login(
       String email, String password) async {
     var request = await _service.login(
         email, password, await AppAssets.getDeviceId() ?? "");
     if (request?['status'] == true) {
-      return Tuple2(VerifyTokenData.fromJson(request?['data']), null);
+      return Tuple2(LoginData.fromJson(request?['data']), null);
     }
     return Tuple2(
       null,
@@ -65,11 +67,14 @@ class ApiRepository extends _ApiService {
     );
   }
 
-  Future<Tuple2<VerifyTokenData?, String?>> dashboard() async {
+  Future<Tuple2<HomeData?, String?>> dashboard() async {
     var request = await _service.dashboard();
+
     if (request?['status'] == true) {
-      return Tuple2(VerifyTokenData.fromJson(request?['data']), null);
+      var o = HomeResponse.fromJson(request!);
+      return Tuple2(o.data, null);
     }
+
     return Tuple2(
       null,
       _getErrorMessage(request),

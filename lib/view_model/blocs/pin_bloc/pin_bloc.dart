@@ -26,7 +26,8 @@ class PinBloc extends Bloc<PinEvent, PinState> {
 
   _login(LoginEvent event, Emitter<PinState> emit) async {
     emit(PinLoading());
-    if (event.pincode == await _appStorage.getPinCode()) {
+    if (event.pincode + (dotenv.env["COMPLETION"] ?? "") ==
+        _appStorage.getPinCode()) {
       emit(PinSuccess());
     } else {
       emit(PinFailed(error: "Incorrect Pin"));
