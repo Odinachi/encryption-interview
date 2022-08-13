@@ -25,7 +25,7 @@ class CongratsScreen extends StatelessWidget {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   SvgPicture.asset(AppAssets.welcomeIcon),
-                  SizedBox(
+                  const SizedBox(
                     height: 40,
                   ),
                   Text(
@@ -37,7 +37,7 @@ class CongratsScreen extends StatelessWidget {
                       fontSize: 24,
                     ),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 10,
                   ),
                   SizedBox(
@@ -56,10 +56,10 @@ class CongratsScreen extends StatelessWidget {
               )),
               AppButton(
                 text: AppStrings.proceedToHome,
-                onPress: () =>
-                    Navigator.pushNamed(context, AppRouteStrings.home),
+                onPress: () => Navigator.pushNamedAndRemoveUntil(
+                    context, AppRouteStrings.home, (route) => false),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 20,
               )
             ],

@@ -58,19 +58,22 @@ class RegisterData {
 }
 
 class RegisterUser {
-  RegisterUser({
-    this.fullName,
-    this.username,
-    this.email,
-    this.country,
-    this.id,
-  });
+  RegisterUser(
+      {this.fullName,
+      this.username,
+      this.email,
+      this.country,
+      this.id,
+      this.password,
+      this.device});
 
   String? fullName;
   String? username;
   String? email;
   String? country;
   String? id;
+  String? password;
+  String? device;
 
   factory RegisterUser.fromJson(Map<String, dynamic> json) => RegisterUser(
         fullName: json["full_name"],
@@ -86,5 +89,7 @@ class RegisterUser {
         "email": email,
         "country": country,
         "id": id,
+        "password": password,
+        "device_name": device
       };
 }

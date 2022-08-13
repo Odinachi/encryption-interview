@@ -26,13 +26,29 @@ Route appRoutes(RouteSettings settings) {
       builder = const SignUpScreen();
       break;
     case AppRouteStrings.verifyOtpScreen:
-      builder = VerifyOtp();
+      VerifyOtpArg arg = settings.arguments as VerifyOtpArg;
+      builder = VerifyOtp(
+        fullname: arg.fullname,
+        email: arg.email,
+        password: arg.password,
+      );
+
       break;
     case AppRouteStrings.locationScreen:
-      builder = const LocationScreen();
+      LocationScreenArg args = settings.arguments as LocationScreenArg;
+      builder = LocationScreen(
+        email: args.email,
+        password: args.password,
+        fullName: args.fullName,
+      );
+
       break;
     case AppRouteStrings.pinScreen:
-      builder = PinScreen();
+      PinScreenArg arg = settings.arguments as PinScreenArg;
+      builder = PinScreen(
+        token: arg.token,
+        newUser: arg.newUser,
+      );
       break;
     case AppRouteStrings.congratsScreen:
       builder = const CongratsScreen();
