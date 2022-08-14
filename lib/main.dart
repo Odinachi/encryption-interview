@@ -20,7 +20,6 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       onGenerateRoute: appRoutes,
       initialRoute: getInitialScreen(),
-      // home: Scaffold(body: HomeScreen()),
     );
   }
 

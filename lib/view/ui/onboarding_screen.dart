@@ -7,7 +7,7 @@ import 'package:apex/view/resuable_widgets/button.dart';
 import 'package:apex/view/resuable_widgets/click_widget.dart';
 import 'package:apex/view/ui/onboarding_widget/onboarding_image_stack.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class OnBoardingScreen extends StatefulWidget {
   const OnBoardingScreen({Key? key}) : super(key: key);
@@ -20,13 +20,7 @@ class _OnBoardingScreenState extends State<OnBoardingScreen>
     with TickerProviderStateMixin {
   late TabController _tabController;
   int tab = 0;
-
-  late AnimationController controller1;
-  late AnimationController controller2;
-  late Animation<Offset> animation1;
-  late Animation<Offset> animation2;
-  late Animation<double> opacityAnimation1;
-  late Animation<double> opacityAnimation2;
+  int? k;
 
   @override
   void initState() {
@@ -35,49 +29,7 @@ class _OnBoardingScreenState extends State<OnBoardingScreen>
     _tabController.addListener(() {
       setState(() {});
     });
-    controller1 = AnimationController(
-      duration: const Duration(milliseconds: 500),
-      vsync: this,
-    );
-    controller2 = AnimationController(
-      duration: const Duration(milliseconds: 500),
-      vsync: this,
-    );
-    animation1 =
-        Tween<Offset>(begin: Offset.zero, end: const Offset(-.001, -.009))
-            .animate(controller1)
-          ..addListener(() {
-            if (controller1.isCompleted) {
-              controller1.reset();
-            }
-            setState(() {});
-            print(animation1.value);
-          });
-    animation2 =
-        Tween<Offset>(begin: Offset.zero, end: const Offset(-.001, -.009))
-            .animate(controller2)
-          ..addListener(() {
-            if (controller2.isCompleted) {
-              controller2.reset();
-            }
-            setState(() {});
-            print(animation2.value);
-          });
-    opacityAnimation1 = Tween<double>(begin: 1, end: 0).animate(controller1)
-      ..addListener(() {
-        setState(() {});
-      });
-    opacityAnimation2 = Tween<double>(begin: 1, end: 0).animate(controller2)
-      ..addListener(() {
-        setState(() {});
-      });
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    controller1.dispose();
-    controller2.dispose();
+    k = 1;
   }
 
   @override
@@ -111,12 +63,7 @@ class _OnBoardingScreenState extends State<OnBoardingScreen>
                   });
                 }
               }
-              if (controller1.isCompleted) {
-                controller1.forward();
-              }
-              if (controller2.isCompleted) {
-                controller2.forward();
-              }
+              k = null;
             },
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.end,
@@ -148,32 +95,29 @@ class _OnBoardingScreenState extends State<OnBoardingScreen>
                               child: SizedBox(),
                             ),
                             Expanded(
-                              flex: 3,
-                              child: AnimatedCrossFade(
-                                  firstChild: SlideTransition(
-                                    position: animation1,
-                                    child: AnimatedAlign(
-                                      duration:
-                                          const Duration(milliseconds: 500),
-                                      alignment: Alignment.bottomCenter,
-                                      child: SvgPicture.asset(
-                                          AppAssets.upperSplash1),
-                                    ),
-                                  ),
-                                  secondChild: SlideTransition(
-                                    position: animation2,
-                                    child: AnimatedAlign(
-                                      duration:
-                                          const Duration(milliseconds: 500),
-                                      alignment: Alignment.bottomCenter,
-                                      child: SvgPicture.asset(
-                                          AppAssets.upperSplash2),
-                                    ),
-                                  ),
-                                  crossFadeState: tab == 0
-                                      ? CrossFadeState.showFirst
-                                      : CrossFadeState.showSecond,
-                                  duration: const Duration(milliseconds: 500)),
+                              flex: 2,
+                              child: AnimatedSwitcher(
+                                duration: const Duration(milliseconds: 500),
+                                transitionBuilder: (Widget child,
+                                    Animation<double> animation) {
+                                  return SlideTransition(
+                                    position: Tween(
+                                      begin: const Offset(.00, .099),
+                                      end: const Offset(0.0, 0.0),
+                                    ).animate(animation),
+                                    child: AnimatedOpacity(
+                                        opacity: k != null
+                                            ? 1
+                                            : animation.value == 0
+                                                ? 1
+                                                : 0,
+                                        duration:
+                                            const Duration(milliseconds: 500),
+                                        child: child),
+                                  );
+                                },
+                                child: buildChild(tab),
+                              ),
                             ),
                           ],
                         ),
@@ -264,4 +208,11 @@ class _OnBoardingScreenState extends State<OnBoardingScreen>
       ),
     );
   }
+
+  buildChild(index) => Align(
+      alignment: Alignment.topCenter,
+      key: ValueKey('$index'),
+      child: index == 0
+          ? SvgPicture.asset(AppAssets.upperSplash1)
+          : SvgPicture.asset(AppAssets.upperSplash2));
 }
