@@ -43,6 +43,11 @@ class __PinScreenState extends State<_PinScreen> {
 
   final FocusNode _pinNode = FocusNode();
   final _formKey = GlobalKey<FormState>();
+  @override
+  void initState() {
+    super.initState();
+    _pinNode.requestFocus();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -103,9 +108,11 @@ class __PinScreenState extends State<_PinScreen> {
                     focusNode: _pinNode,
                     cursorColor: AppColors.appOrangeColor,
                     controller: _pinController,
-                    keyboardType: TextInputType.number,
+                    keyboardType: TextInputType.none,
                     enableActiveFill: false,
-                    validator: (g) {},
+                    validator: (g) => _pinController.text.length == 5
+                        ? null
+                        : "Input valid pin",
                     autoFocus: false,
                     obscureText: true,
                     showCursor: true,

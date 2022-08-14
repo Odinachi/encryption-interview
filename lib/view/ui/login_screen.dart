@@ -47,6 +47,7 @@ class __LoginScreenState extends State<_LoginScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.white,
+      resizeToAvoidBottomInset: false,
       body: BlocListener<LoginBloc, LoginState>(
         listener: (context, state) {
           if (state is HasAuth) {

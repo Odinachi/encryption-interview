@@ -57,6 +57,12 @@ class __VerifyOtpState extends State<_VerifyOtp> {
   final _formKey = GlobalKey<FormState>();
 
   @override
+  void initState() {
+    super.initState();
+    _pinNode.requestFocus();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.white,
@@ -110,7 +116,7 @@ class __VerifyOtpState extends State<_VerifyOtp> {
                   PinCodeTextField(
                     focusNode: _pinNode,
                     controller: _pinController,
-                    keyboardType: TextInputType.number,
+                    keyboardType: TextInputType.none,
                     enableActiveFill: true,
                     validator: (g) {
                       if (g?.length != 5) {

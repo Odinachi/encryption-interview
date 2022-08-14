@@ -46,6 +46,7 @@ class __SignUpScreenState extends State<_SignUpScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       backgroundColor: AppColors.white,
       appBar: apexAppBar(
         onTap: () => Navigator.pushReplacementNamed(
