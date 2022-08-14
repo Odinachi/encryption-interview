@@ -101,10 +101,15 @@ class _OnBoardingScreenState extends State<OnBoardingScreen>
                                 transitionBuilder: (Widget child,
                                     Animation<double> animation) {
                                   return SlideTransition(
-                                    position: Tween(
-                                      begin: const Offset(.00, .099),
-                                      end: const Offset(0.0, 0.0),
-                                    ).animate(animation),
+                                    position: tab == 0
+                                        ? Tween(
+                                            begin: const Offset(.00, .099),
+                                            end: const Offset(0.0, 0.0),
+                                          ).animate(animation)
+                                        : Tween(
+                                            begin: const Offset(.00, .00),
+                                            end: const Offset(0.0, 0.099),
+                                          ).animate(animation),
                                     child: AnimatedOpacity(
                                         opacity: k != null
                                             ? 1
