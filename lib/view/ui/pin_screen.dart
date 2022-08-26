@@ -83,7 +83,9 @@ class __PinScreenState extends State<_PinScreen> {
                     height: screenHeight(.03, context),
                   ),
                   Text(
-                    AppStrings.setNewPin,
+                    widget.newUser == true
+                        ? AppStrings.setNewPin
+                        : AppStrings.providePin,
                     style: AppAssets.appTextStyle.copyWith(
                       color: AppColors.appDarkColor,
                       fontWeight: FontWeight.w700,
@@ -93,14 +95,15 @@ class __PinScreenState extends State<_PinScreen> {
                   SizedBox(
                     height: screenHeight(.01, context),
                   ),
-                  Text(
-                    AppStrings.setNewPinDesc,
-                    style: AppAssets.appTextStyle.copyWith(
-                      color: AppColors.appHintColor,
-                      fontWeight: FontWeight.w400,
-                      fontSize: 16,
+                  if (widget.newUser == true)
+                    Text(
+                      AppStrings.setNewPinDesc,
+                      style: AppAssets.appTextStyle.copyWith(
+                        color: AppColors.appHintColor,
+                        fontWeight: FontWeight.w400,
+                        fontSize: 16,
+                      ),
                     ),
-                  ),
                   SizedBox(
                     height: screenHeight(.035, context),
                   ),

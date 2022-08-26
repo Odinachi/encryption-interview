@@ -44,15 +44,20 @@ class AppAssets {
       required bool isSuccessful}) {
     ScaffoldMessenger.of(ctx).showSnackBar(
       SnackBar(
-        content: Text(
-          message ?? "",
-          style:
-              appTextStyle.copyWith(fontWeight: FontWeight.w600, fontSize: 15),
+        content: Stack(
+          children: [
+            Positioned(
+              top: 0,
+              child: Text(
+                message ?? "",
+                style: appTextStyle.copyWith(
+                    fontWeight: FontWeight.w600, fontSize: 15),
+              ),
+            ),
+          ],
         ),
         backgroundColor: isSuccessful ? Colors.green : Colors.red,
         behavior: SnackBarBehavior.floating,
-        margin: EdgeInsets.fromLTRB(
-            20, 20, 20, MediaQuery.of(ctx).size.height - 130),
       ),
     );
   }

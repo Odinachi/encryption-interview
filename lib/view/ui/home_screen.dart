@@ -44,13 +44,16 @@ class _HomeScreen extends StatelessWidget {
           }
           if (state is DashboardSuccess) {
             return Center(
-              child: Text(
-                state.message,
-                textAlign: TextAlign.center,
-                style: AppAssets.appTextStyle.copyWith(
-                  color: AppColors.appDarkColor,
-                  fontWeight: FontWeight.w700,
-                  fontSize: 16,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                child: Text(
+                  state.message,
+                  textAlign: TextAlign.center,
+                  style: AppAssets.appTextStyle.copyWith(
+                    color: AppColors.appDarkColor,
+                    fontWeight: FontWeight.w700,
+                    fontSize: 16,
+                  ),
                 ),
               ),
             );

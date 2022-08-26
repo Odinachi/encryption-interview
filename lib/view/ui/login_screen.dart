@@ -57,10 +57,7 @@ class __LoginScreenState extends State<_LoginScreen> {
               arguments: PinScreenArg(newUser: false, token: ""),
             );
           }
-          if (state is LoginFailed) {
-            AppAssets.showSnackBar(
-                ctx: context, isSuccessful: false, message: state.error);
-          }
+
           if (state is LoginSuccess) {
             Navigator.pushNamed(
               context,
@@ -100,22 +97,41 @@ class __LoginScreenState extends State<_LoginScreen> {
                       fontSize: 16,
                     ),
                   ),
+                  BlocBuilder<LoginBloc, LoginState>(builder: (context, state) {
+                    if (state is LoginFailed) {
+                      return Container(
+                        padding: const EdgeInsets.only(top: 10),
+                        child: Text(
+                          state.error,
+                          textAlign: TextAlign.center,
+                          style: AppAssets.appTextStyle.copyWith(
+                              fontWeight: FontWeight.w500, color: Colors.red),
+                        ),
+                      );
+                    }
+                    return const SizedBox();
+                  }),
                   SizedBox(
-                    height: screenHeight(.05, context),
+                    height: screenHeight(.03, context),
                   ),
                   AppTextFormField(
                     isPassword: false,
                     controller: _emailController,
                     inputName: AppStrings.email,
+                    validate: (v) => v?.isValidEmail() == true
+                        ? null
+                        : "Provide a valid Email",
                   ),
                   SizedBox(
                     height: screenHeight(.02, context),
                   ),
                   AppTextFormField(
-                    isPassword: true,
-                    controller: _passwordController,
-                    inputName: AppStrings.password,
-                  ),
+                      isPassword: true,
+                      controller: _passwordController,
+                      inputName: AppStrings.password,
+                      validate: (v) => v?.isValidPassword() == true
+                          ? null
+                          : "Provide a valid Password"),
                   SizedBox(
                     height: screenHeight(.025, context),
                   ),
@@ -144,12 +160,13 @@ class __LoginScreenState extends State<_LoginScreen> {
                     }
                     return AppButton(
                       loading: l,
-                      enabled: _passwordController.text.isNotEmpty &&
-                          _emailController.text.isNotEmpty,
+                      enabled: _formKey.currentState?.validate() == true,
                       onPress: () {
-                        context.read<LoginBloc>().add(Login(
-                            email: _emailController.text,
-                            password: _passwordController.text));
+                        if (_formKey.currentState?.validate() == true) {
+                          context.read<LoginBloc>().add(Login(
+                              email: _emailController.text,
+                              password: _passwordController.text));
+                        }
                       },
                       text: AppStrings.signIn,
                     );

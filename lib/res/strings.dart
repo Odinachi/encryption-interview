@@ -21,6 +21,7 @@ class AppStrings {
   static String congratsDesc(String name) =>
       "Hey $name, your account has been successfully created 👋 ";
   static const setNewPin = "Set your PIN code";
+  static const providePin = "Provide your PIN code";
   static const setNewPinDesc =
       "We use state-of-the-art security measures to protect your information at all times";
   static const email = "Email";
